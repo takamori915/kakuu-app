@@ -194,20 +194,20 @@ h1 .mark { color: var(--accent); }
 <div class="wrap">
   <header class="top">
     <h1><span class="mark">かきじゅん</span>ずかん</h1>
-    <p class="lead">さがす・えらぶ・タップで動画</p>
+    <p class="lead">さがす・えらぶ・タップで どうが</p>
   </header>
 
   <section class="controls" aria-label="さがす・しぼりこみ">
-    <div class="tabs" id="tabs" role="tablist" aria-label="文字のしゅるい"></div>
+    <div class="tabs" id="tabs" role="tablist" aria-label="もじの しゅるい"></div>
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       <input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search"
-             placeholder="漢字・よみ・ことば(例: あめ)" aria-label="漢字・よみ・ことばで さがす">
-      <button class="clear" id="qclear" type="button" aria-label="入力を消す" hidden>×</button>
+             placeholder="さがす(れい: あめ)" aria-label="かんじ・よみ・ことばで さがす">
+      <button class="clear" id="qclear" type="button" aria-label="もじを けす" hidden>×</button>
     </div>
     <div class="filters">
-      <div class="frow"><span class="flabel">よみ</span><div class="chips" id="rows" role="group" aria-label="よみの行でしぼりこむ"></div></div>
-      <div class="frow"><span class="flabel">画数</span><div class="chips" id="strokes" role="group" aria-label="画数でしぼりこむ"></div></div>
+      <div class="frow"><span class="flabel">よみ</span><div class="chips" id="rows" role="group" aria-label="よみの ぎょうで しぼりこむ"></div></div>
+      <div class="frow"><span class="flabel">かず</span><div class="chips" id="strokes" role="group" aria-label="かくの かずで しぼりこむ"></div></div>
       <div class="frow"><span class="flabel">しるし</span><div class="chips" id="status" role="group" aria-label="しるしでしぼりこむ"></div></div>
     </div>
   </section>
@@ -216,38 +216,38 @@ h1 .mark { color: var(--accent); }
     <span id="count" aria-live="polite"></span>
     <span class="sort" role="group" aria-label="ならびかえ">
       <button type="button" data-sort="kana" aria-pressed="true">あいうえお順</button>
-      <button type="button" data-sort="strokes" aria-pressed="false">画数順</button>
+      <button type="button" data-sort="strokes" aria-pressed="false">かずの じゅん</button>
     </span>
   </div>
 
   <ul class="grid" id="grid"></ul>
   <div class="empty" id="soon" hidden>
-    <strong>このタブの動画は、まだありません</strong>
-    <span>じゅんびができたら、ここに並びます。</span>
+    <strong>このタブの どうがは、まだ ありません</strong>
+    <span>じゅんびが できたら、ここに ならびます。</span>
   </div>
   <div class="empty" id="empty" hidden>
-    <strong>見つかりません</strong>
-    <span>ひらがなで「あめ」のように入れるか、しぼりこみを外してください。</span><br>
-    <button type="button" id="reset">しぼりこみを全部外す</button>
+    <strong>みつかりません</strong>
+    <span>ひらがなで「あめ」のように いれるか、しぼりこみを はずして ください。</span><br>
+    <button type="button" id="reset">しぼりこみを ぜんぶ はずす</button>
   </div>
 
   <aside class="foot">
-    <p>動画は手づくりです。学校の見本や先生の教え方とちがうときは、学校のほうを優先してください。</p>
-    <p>「練習中」「おぼえた」のしるしは、このブラウザの中にだけ残ります。</p>
+    <p>どうがは てづくりです。がっこうの みほんや せんせいの おしえかたと ちがうときは、がっこうの ほうを まもってね。</p>
+    <p>「れんしゅう」「おぼえた」の しるしは、この ブラウザの なかにだけ のこります。</p>
   </aside>
 </div>
 
 <div class="scrim" id="scrim" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="dtitle" id="sheet">
     <div class="sheet-head">
-      <button class="icon-btn" id="prev" type="button" aria-label="前の漢字">‹</button>
+      <button class="icon-btn" id="prev" type="button" aria-label="まえの もじ">‹</button>
       <h2 id="dtitle"></h2>
-      <button class="icon-btn" id="next" type="button" aria-label="次の漢字">›</button>
+      <button class="icon-btn" id="next" type="button" aria-label="つぎの もじ">›</button>
       <button class="icon-btn" id="close" type="button" aria-label="とじる">×</button>
     </div>
     <div class="video-box"><video id="video" controls playsinline muted loop preload="metadata"></video></div>
     <div class="sheet-body">
-      <div class="speed" role="group" aria-label="再生のはやさ">
+      <div class="speed" role="group" aria-label="どうがの はやさ">
         <button class="chip" type="button" data-rate="0.5" aria-pressed="false">ゆっくり</button>
         <button class="chip" type="button" data-rate="1" aria-pressed="true">ふつう</button>
       </div>
@@ -277,7 +277,7 @@ KANA.k.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "katakana", on: [], kun
 KANA.n.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "number", on: [], kun: [], words: [], grade: 0, strokes: n, video: `videos/n_${c}.mp4`, note: "", ord: i, sub: r }));
 
 /* tabs: each entry in KANJI carries cat (default "kanji"). Hiragana / katakana / numbers use the same fields. */
-const CATS = [["hiragana", "ひらがな"], ["katakana", "カタカナ"], ["number", "数字"], ["kanji", "漢字"]];
+const CATS = [["hiragana", "ひらがな"], ["katakana", "カタカナ"], ["number", "すうじ"], ["kanji", "かんじ"]];
 const ROWS = [["あ", "あいうえお"], ["か", "かきくけこがぎぐげご"], ["さ", "さしすせそざじずぜぞ"], ["た", "たちつてとだぢづでど"],
   ["な", "なにぬねの"], ["は", "はひふへほばびぶべぼぱぴぷぺぽ"], ["ま", "まみむめも"], ["や", "やゆよ"], ["ら", "らりるれろ"], ["わ", "わをん"]];
 
@@ -295,7 +295,7 @@ KANJI.forEach((d) => {
   if (d.cat === "number") d.sub += { "0": " れい まる", "4": " し", "7": " しち", "9": " く" }[d.k] || "";
   d.sortKey = norm(d.kun[0] || d.on[0] || "");
   d.rows = isKana ? [rowOf(d.k)].filter(Boolean) : [...new Set(reads.map(rowOf).filter(Boolean))];
-  d.hay = norm([d.k, ...reads, ...d.words.flat(), d.strokes + "画", d.grade ? d.grade + "年" : "", d.sub || ""].join(" "));
+  d.hay = norm([d.k, ...reads, ...d.words.flat(), d.strokes + "画", d.strokes + "かく", d.grade ? d.grade + "年" + d.grade + "ねん" : "", d.sub || ""].join(" "));
   d.direct = [d.k, ...reads, ...(d.sub ? d.sub.split(" ") : [])].map(norm);   /* the kanji itself and its readings, for ranking */
 });
 
@@ -345,27 +345,27 @@ function chipGroup(el, items, current, onPick) {
 const pool = () => KANJI.filter((d) => d.cat === state.cat);
 function renderTabs() {
   $("tabs").innerHTML = CATS.map(([id, label]) =>
-    `<button class="tab" type="button" role="tab" id="tab-${id}" data-cat="${id}" aria-selected="${id === state.cat}">${esc(label)}<small>${KANJI.filter((d) => d.cat === id).length}字</small></button>`).join("");
+    `<button class="tab" type="button" role="tab" id="tab-${id}" data-cat="${id}" aria-selected="${id === state.cat}">${esc(label)}<small>${KANJI.filter((d) => d.cat === id).length}こ</small></button>`).join("");
 }
 function renderFilters() {
   const rows = ROWS.map((r) => r[0]).filter((r) => pool().some((d) => d.rows.includes(r)));
-  chipGroup($("rows"), [["", "ぜんぶ"], ...rows.map((r) => [r, r + "行"])], state.row || "", (v) => { state.row = v || null; update(); });
+  chipGroup($("rows"), [["", "ぜんぶ"], ...rows.map((r) => [r, r + "ぎょう"])], state.row || "", (v) => { state.row = v || null; update(); });
   const ss = [...new Set(pool().map((d) => d.strokes))].sort((a, b) => a - b);
-  chipGroup($("strokes"), [["", "ぜんぶ"], ...ss.map((n) => [n, n + "画"])], state.strokes || "", (v) => { state.strokes = v ? Number(v) : null; update(); });
-  chipGroup($("status"), [["all", "ぜんぶ"], ["none", "まだ"], ["practice", "練習中"], ["done", "おぼえた"]], state.status, (v) => { state.status = v; update(); });
+  chipGroup($("strokes"), [["", "ぜんぶ"], ...ss.map((n) => [n, n + "かく"])], state.strokes || "", (v) => { state.strokes = v ? Number(v) : null; update(); });
+  chipGroup($("status"), [["all", "ぜんぶ"], ["none", "まだ"], ["practice", "れんしゅう"], ["done", "おぼえた"]], state.status, (v) => { state.status = v; update(); });
 }
 function cardHTML(d) {
   const m = marks[d.k] || "";
-  const reads = d.sub ? `よみ <b>${esc(d.sub.split(" ")[0])}</b>` : [d.on.length ? `音 <b>${esc(d.on.join("・"))}</b>` : "", d.kun.length ? `訓 <b>${esc(d.kun.join("・"))}</b>` : ""].filter(Boolean).join("<br>");
+  const reads = d.sub ? `よみ <b>${esc(d.sub.split(" ")[0])}</b>` : [d.on.length ? `おん <b>${esc(d.on.join("・"))}</b>` : "", d.kun.length ? `くん <b>${esc(d.kun.join("・"))}</b>` : ""].filter(Boolean).join("<br>");
   return `<li class="card" data-status="${esc(m)}">
-    <button class="open" type="button" data-open="${esc(d.k)}" aria-label="${esc(d.k)}の書き順動画を見る">
+    <button class="open" type="button" data-open="${esc(d.k)}" aria-label="${esc(d.k)}の かきじゅんを みる">
       <span class="square"><span class="kanji">${esc(d.k)}</span></span>
-      <span class="meta"><span class="tag">${d.strokes}画</span>${d.grade ? `<span class="tag plain">${d.grade}年</span>` : ""}</span>
+      <span class="meta"><span class="tag">${d.strokes}かく</span>${d.grade ? `<span class="tag plain">${d.grade}ねん</span>` : ""}</span>
       <span class="reads">${reads}</span>
-      <span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>書き順を見る</span>
+      <span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>かきじゅんを みる</span>
     </button>
     <div class="marks">
-      <button class="mark-btn practice" type="button" data-mark="practice" data-k="${esc(d.k)}" aria-pressed="${m === "practice"}">練習中</button>
+      <button class="mark-btn practice" type="button" data-mark="practice" data-k="${esc(d.k)}" aria-pressed="${m === "practice"}">れんしゅう</button>
       <button class="mark-btn done" type="button" data-mark="done" data-k="${esc(d.k)}" aria-pressed="${m === "done"}">おぼえた</button>
     </div>
   </li>`;
@@ -378,7 +378,7 @@ function renderList() {
   $("empty").hidden = list.length > 0 || total === 0;
   const nP = pool().filter((d) => marks[d.k] === "practice").length;
   const nD = pool().filter((d) => marks[d.k] === "done").length;
-  $("count").innerHTML = `<b>${total}</b>字中 <b>${list.length}</b>字を表示 ・ 練習中 <b>${nP}</b> ・ おぼえた <b>${nD}</b>`;
+  $("count").innerHTML = `ぜんぶで <b>${total}</b>こ ・ いま <b>${list.length}</b>こ ・ れんしゅう <b>${nP}</b> ・ おぼえた <b>${nD}</b>`;
   $("qclear").hidden = !state.q;
   document.querySelectorAll(".sort button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.sort === state.sort)));
   return list;
@@ -417,14 +417,14 @@ let openFrom = null, openKey = null;
 function show(k) {
   const d = KANJI.find((x) => x.k === k); if (!d) return;
   openKey = k;
-  $("dtitle").innerHTML = `<span class="k">${esc(d.k)}</span>${d.strokes}画${d.grade ? ` ・ ${d.grade}年` : ""}`;
+  $("dtitle").innerHTML = `<span class="k">${esc(d.k)}</span>${d.strokes}かく${d.grade ? ` ・ ${d.grade}ねん` : ""}`;
   const v = $("video");
   v.src = d.video; v.playbackRate = Number(document.querySelector(".speed .chip[aria-pressed=true]").dataset.rate);
   v.play().catch(() => {});
   const words = d.words.map(([w, r]) => `${esc(w)}(${esc(r)})`).join("、");
   $("facts").innerHTML = d.sub ? `<dt>よみ</dt><dd>${esc(d.sub.split(" ")[0])}</dd>` :
-    (d.on.length ? `<dt>音読み</dt><dd>${esc(d.on.join("、"))}</dd>` : "") +
-    (d.kun.length ? `<dt>訓読み</dt><dd>${esc(d.kun.join("、"))}</dd>` : "") +
+    (d.on.length ? `<dt>おんよみ</dt><dd>${esc(d.on.join("、"))}</dd>` : "") +
+    (d.kun.length ? `<dt>くんよみ</dt><dd>${esc(d.kun.join("、"))}</dd>` : "") +
     `<dt>ことば</dt><dd>${words}</dd>`;
   $("note").hidden = !d.note; $("note").textContent = d.note || "";
   const i = currentList.findIndex((x) => x.k === k);
