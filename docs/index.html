@@ -314,6 +314,7 @@ function matches(d) {
   if (state.row && !d.rows.includes(state.row)) return false;
   if (state.strokes && d.strokes !== state.strokes) return false;
   const m = marks[d.k] || "";
+  if (state.status === "none" && m !== "") return false;
   if (state.status === "practice" && m !== "practice") return false;
   if (state.status === "done" && m !== "done") return false;
   return true;
@@ -351,7 +352,7 @@ function renderFilters() {
   chipGroup($("rows"), [["", "ぜんぶ"], ...rows.map((r) => [r, r + "行"])], state.row || "", (v) => { state.row = v || null; update(); });
   const ss = [...new Set(pool().map((d) => d.strokes))].sort((a, b) => a - b);
   chipGroup($("strokes"), [["", "ぜんぶ"], ...ss.map((n) => [n, n + "画"])], state.strokes || "", (v) => { state.strokes = v ? Number(v) : null; update(); });
-  chipGroup($("status"), [["all", "ぜんぶ"], ["practice", "練習中"], ["done", "おぼえた"]], state.status, (v) => { state.status = v; update(); });
+  chipGroup($("status"), [["all", "ぜんぶ"], ["none", "まだ"], ["practice", "練習中"], ["done", "おぼえた"]], state.status, (v) => { state.status = v; update(); });
 }
 function cardHTML(d) {
   const m = marks[d.k] || "";
