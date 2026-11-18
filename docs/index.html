@@ -17,11 +17,11 @@
   --line: #c9dbea;
   --ink: #1b2230;
   --ink-2: #566175;
-  --accent: #d4342f;
-  --accent-soft: #fde7e5;
+  --accent: #0f7fc0;
+  --accent-soft: #dff1fb;
   --ok: #26804f;
   --ok-soft: #e0f2e7;
-  --guide: #f0b7b3;
+  --guide: #b5d9ee;
   --shadow: 0 1px 0 rgba(27, 34, 48, .05), 0 6px 18px rgba(27, 34, 48, .06);
   --font-body: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
   --font-kanji: "Klee One", "Yu Kyokasho", "UD Digi Kyokasho N-R", "Hiragino Mincho ProN", "Noto Serif JP", serif;
@@ -30,16 +30,16 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --paper: #12171e; --card: #1a212b; --grid: #1b2430; --line: #2b3646;
-    --ink: #edf1f7; --ink-2: #9ba7b9; --accent: #ff6e67; --accent-soft: #3b2321;
-    --ok: #5ccb8a; --ok-soft: #1c3227; --guide: #6a3b39;
+    --ink: #edf1f7; --ink-2: #9ba7b9; --accent: #5cc3f0; --accent-soft: #1c3442;
+    --ok: #5ccb8a; --ok-soft: #1c3227; --guide: #2f5568;
     --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #12171e; --card: #1a212b; --grid: #1b2430; --line: #2b3646;
-  --ink: #edf1f7; --ink-2: #9ba7b9; --accent: #ff6e67; --accent-soft: #3b2321;
-  --ok: #5ccb8a; --ok-soft: #1c3227; --guide: #6a3b39;
+  --ink: #edf1f7; --ink-2: #9ba7b9; --accent: #5cc3f0; --accent-soft: #1c3442;
+  --ok: #5ccb8a; --ok-soft: #1c3227; --guide: #2f5568;
   --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25);
   color-scheme: dark;
 }
@@ -110,8 +110,8 @@ h1 .mark { color: var(--accent); }
   font-size: 15px; white-space: nowrap;
 }
 .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
-:root[data-theme="dark"] .chip[aria-pressed="true"] { color: #1a1010; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip[aria-pressed="true"] { color: #1a1010; } }
+:root[data-theme="dark"] .chip[aria-pressed="true"] { color: #08141c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip[aria-pressed="true"] { color: #08141c; } }
 
 .summary { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; justify-content: space-between; padding: 14px 0 10px; color: var(--ink-2); font-size: 14px; }
 .summary b { color: var(--ink); font-variant-numeric: tabular-nums; }

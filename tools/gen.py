@@ -12,7 +12,7 @@ UIB = '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'
 
 BG = (250, 246, 238)
 INK = np.array([34, 34, 38], np.float32)
-RED = np.array([214, 48, 49], np.float32)
+RED = np.array([20, 148, 214], np.float32)
 GHOST = np.array([226, 222, 214], np.float32)
 NUMS = '①②③④⑤⑥⑦⑧⑨⑩'
 
@@ -156,7 +156,7 @@ def base_img():
     im = Image.new('RGB', (W, H), BG)
     d = ImageDraw.Draw(im)
     d.rounded_rectangle([PX - 6, PY - 6, PX + P + 6, PY + P + 6], 14, fill=(255, 255, 255), outline=(205, 198, 186), width=3)
-    c = (236, 170, 170)
+    c = (160, 205, 230)
     for t in range(0, P, 16):
         d.line([(PX + P // 2, PY + t), (PX + P // 2, PY + min(t + 8, P))], fill=c, width=2)
         d.line([(PX + t, PY + P // 2), (PX + min(t + 8, P), PY + P // 2)], fill=c, width=2)
@@ -170,13 +170,13 @@ def right_panel(spec, state, F):
     d = ImageDraw.Draw(im)
     x0 = 740
     d.text((x0, 58), f"「{spec['ch']}」の書き順", font=F['T'], fill=(34, 34, 38))
-    d.text((x0, 128), f'全{n}画  ・  赤い線が いま書いている画', font=F['S'], fill=(110, 104, 96))
+    d.text((x0, 128), f'全{n}画  ・  青い線が いま書いている画', font=F['S'], fill=(110, 104, 96))
     y = 192 if n <= 6 else 184
     for i, t in enumerate(rows):
         cur, done = state == i, state > i
         if cur:
-            d.rounded_rectangle([x0 - 14, y - 6, W - 40, y + pitch - 14], 14, fill=(252, 226, 224))
-        col = (214, 48, 49) if cur else ((34, 34, 38) if done else (170, 164, 156))
+            d.rounded_rectangle([x0 - 14, y - 6, W - 40, y + pitch - 14], 14, fill=(219, 238, 250))
+        col = (20, 148, 214) if cur else ((34, 34, 38) if done else (170, 164, 156))
         d.text((x0, y + 4), NUMS[i], font=F['N'], fill=col)
         fs = F['R'].size
         fr = F['R']
@@ -186,7 +186,7 @@ def right_panel(spec, state, F):
         d.text((x0 + 48, y + 3 + (F['R'].size - fs) // 2), t, font=fr, fill=col)
         y += pitch
     if state == n:
-        d.text((x0, y + 10), 'できあがり!', font=F['C'], fill=(214, 48, 49))
+        d.text((x0, y + 10), 'できあがり!', font=F['C'], fill=(20, 148, 214))
     return im
 
 
@@ -221,7 +221,7 @@ class Maker:
             sx, sy = self.spec['paths'][c][0]
             ox, oy = self.spec['badge'].get(c, (-34, -26))
             bx, by = PX + sx * K + ox, PY + sy * K + oy
-            d.ellipse([bx - 17, by - 17, bx + 17, by + 17], fill=(214, 48, 49))
+            d.ellipse([bx - 17, by - 17, bx + 17, by + 17], fill=(20, 148, 214))
             d.text((bx, by - 1), str(c + 1), font=self.F['N'], fill=(255, 255, 255), anchor='mm')
         return np.asarray(im.convert('RGB'))
 
