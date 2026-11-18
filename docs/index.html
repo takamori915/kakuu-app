@@ -413,7 +413,7 @@ $("grid").addEventListener("click", (e) => {
 });
 
 /* ---- dialog ---- */
-let openFrom = null, openKey = null;
+let openFrom = null, openKey = null, marksChanged = false;
 function show(k) {
   const d = KANJI.find((x) => x.k === k); if (!d) return;
   openKey = k;
@@ -421,6 +421,8 @@ function show(k) {
   const v = $("video");
   v.src = d.video; v.playbackRate = Number(document.querySelector(".speed .chip[aria-pressed=true]").dataset.rate);
   v.play().catch(() => {});
+  /* watching a video counts as "みた" (never overrides おぼえた) */
+  if (!marks[k]) { marks[k] = "practice"; saveMarks(); marksChanged = true; }
   const words = d.words.map(([w, r]) => `${esc(w)}(${esc(r)})`).join("、");
   $("facts").innerHTML = d.sub ? `<dt>よみ</dt><dd>${esc(d.sub.split(" ")[0])}</dd>` :
     (d.on.length ? `<dt>おんよみ</dt><dd>${esc(d.on.join("、"))}</dd>` : "") +
@@ -431,7 +433,7 @@ function show(k) {
   $("prev").disabled = i <= 0; $("next").disabled = i < 0 || i >= currentList.length - 1;
 }
 function openDialog(k, from) { openFrom = from || null; $("scrim").hidden = false; show(k); $("close").focus(); }
-function closeDialog() { const v = $("video"); v.pause(); v.removeAttribute("src"); v.load(); $("scrim").hidden = true; if (openFrom && document.contains(openFrom)) openFrom.focus(); }
+function closeDialog() { const v = $("video"); v.pause(); v.removeAttribute("src"); v.load(); $("scrim").hidden = true; if (marksChanged) { marksChanged = false; update(); } if (openFrom && document.contains(openFrom)) openFrom.focus(); }
 function step(n) { const i = currentList.findIndex((x) => x.k === openKey); const t = currentList[i + n]; if (t) show(t.k); }
 $("close").addEventListener("click", closeDialog);
 $("prev").addEventListener("click", () => step(-1));
