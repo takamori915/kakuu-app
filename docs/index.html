@@ -233,7 +233,7 @@ h1 .mark { color: var(--accent); }
 
   <aside class="foot">
     <p>どうがは てづくりです。がっこうの みほんや せんせいの おしえかたと ちがうときは、がっこうの ほうを まもってね。</p>
-    <p>「れんしゅう」「おぼえた」の しるしは、この ブラウザの なかにだけ のこります。</p>
+    <p>「みた」「おぼえた」の しるしは、この ブラウザの なかにだけ のこります。</p>
   </aside>
 </div>
 
@@ -352,7 +352,7 @@ function renderFilters() {
   chipGroup($("rows"), [["", "ぜんぶ"], ...rows.map((r) => [r, r + "ぎょう"])], state.row || "", (v) => { state.row = v || null; update(); });
   const ss = [...new Set(pool().map((d) => d.strokes))].sort((a, b) => a - b);
   chipGroup($("strokes"), [["", "ぜんぶ"], ...ss.map((n) => [n, n + "かく"])], state.strokes || "", (v) => { state.strokes = v ? Number(v) : null; update(); });
-  chipGroup($("status"), [["all", "ぜんぶ"], ["none", "まだ"], ["practice", "れんしゅう"], ["done", "おぼえた"]], state.status, (v) => { state.status = v; update(); });
+  chipGroup($("status"), [["all", "ぜんぶ"], ["none", "まだ"], ["practice", "みた"], ["done", "おぼえた"]], state.status, (v) => { state.status = v; update(); });
 }
 function cardHTML(d) {
   const m = marks[d.k] || "";
@@ -365,7 +365,7 @@ function cardHTML(d) {
       <span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>かきじゅんを みる</span>
     </button>
     <div class="marks">
-      <button class="mark-btn practice" type="button" data-mark="practice" data-k="${esc(d.k)}" aria-pressed="${m === "practice"}">れんしゅう</button>
+      <button class="mark-btn practice" type="button" data-mark="practice" data-k="${esc(d.k)}" aria-pressed="${m === "practice"}">みた</button>
       <button class="mark-btn done" type="button" data-mark="done" data-k="${esc(d.k)}" aria-pressed="${m === "done"}">おぼえた</button>
     </div>
   </li>`;
@@ -378,7 +378,7 @@ function renderList() {
   $("empty").hidden = list.length > 0 || total === 0;
   const nP = pool().filter((d) => marks[d.k] === "practice").length;
   const nD = pool().filter((d) => marks[d.k] === "done").length;
-  $("count").innerHTML = `ぜんぶで <b>${total}</b>こ ・ いま <b>${list.length}</b>こ ・ れんしゅう <b>${nP}</b> ・ おぼえた <b>${nD}</b>`;
+  $("count").innerHTML = `ぜんぶで <b>${total}</b>こ ・ いま <b>${list.length}</b>こ ・ みた <b>${nP}</b> ・ おぼえた <b>${nD}</b>`;
   $("qclear").hidden = !state.q;
   document.querySelectorAll(".sort button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.sort === state.sort)));
   return list;
