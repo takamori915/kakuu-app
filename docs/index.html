@@ -189,6 +189,7 @@ h1 .mark { color: var(--accent); }
   .card:hover { transform: translateY(-2px); }
 }
 </style>
+<link rel="stylesheet" href="practice.css">
 </head>
 <body>
 <div class="wrap">
@@ -267,7 +268,25 @@ const KANJI = [
   { k: "水", on: ["スイ"], kun: ["みず"], words: [["水", "みず"], ["水玉", "みずたま"], ["水田", "すいでん"]],
     grade: 1, strokes: 4, video: "videos/sui.mp4", note: "" },
   { k: "大", on: ["ダイ", "タイ"], kun: ["おお", "おおきい"], words: [["大きい", "おおきい"], ["大雨", "おおあめ"], ["大小", "だいしょう"]],
-    grade: 1, strokes: 3, video: "videos/dai.mp4", note: "" }
+    grade: 1, strokes: 3, video: "videos/dai.mp4", note: "" },
+  { k: "一", on: ["イチ", "イツ"], kun: ["ひと", "ひとつ"], words: [["一つ", "ひとつ"], ["一人", "ひとり"], ["一年", "いちねん"]],
+    grade: 1, strokes: 1, video: "videos/ichi.mp4", note: "" },
+  { k: "二", on: ["ニ"], kun: ["ふた", "ふたつ"], words: [["二つ", "ふたつ"], ["二人", "ふたり"], ["二日", "ふつか"]],
+    grade: 1, strokes: 2, video: "videos/ni.mp4", note: "" },
+  { k: "三", on: ["サン"], kun: ["み", "みっつ"], words: [["三つ", "みっつ"], ["三日", "みっか"], ["三月", "さんがつ"]],
+    grade: 1, strokes: 3, video: "videos/san.mp4", note: "" },
+  { k: "十", on: ["ジュウ", "ジッ"], kun: ["とお", "と"], words: [["十", "とお"], ["十人", "じゅうにん"], ["十日", "とおか"]],
+    grade: 1, strokes: 2, video: "videos/juu.mp4", note: "" },
+  { k: "八", on: ["ハチ"], kun: ["や", "やっつ"], words: [["八つ", "やっつ"], ["八百", "はっぴゃく"], ["八日", "ようか"]],
+    grade: 1, strokes: 2, video: "videos/hachi.mp4", note: "" },
+  { k: "力", on: ["リョク", "リキ"], kun: ["ちから"], words: [["力", "ちから"], ["力もち", "ちからもち"], ["学力", "がくりょく"]],
+    grade: 1, strokes: 2, video: "videos/chikara.mp4", note: "" },
+  { k: "人", on: ["ジン", "ニン"], kun: ["ひと"], words: [["人", "ひと"], ["大人", "おとな"], ["人口", "じんこう"]],
+    grade: 1, strokes: 2, video: "videos/hito.mp4", note: "" },
+  { k: "入", on: ["ニュウ"], kun: ["い", "はい"], words: [["入る", "はいる"], ["入口", "いりぐち"], ["入学", "にゅうがく"]],
+    grade: 1, strokes: 2, video: "videos/nyuu.mp4", note: "" },
+  { k: "小", on: ["ショウ"], kun: ["ちい", "こ", "お"], words: [["小さい", "ちいさい"], ["小雨", "こさめ"], ["小学校", "しょうがっこう"]],
+    grade: 1, strokes: 3, video: "videos/shou.mp4", note: "" }
 ];
 
 /* kana & numbers: [char, romaji/reading, strokes] — video file is videos/<prefix>_<romaji>.mp4 */
@@ -431,9 +450,10 @@ function show(k) {
   $("note").hidden = !d.note; $("note").textContent = d.note || "";
   const i = currentList.findIndex((x) => x.k === k);
   $("prev").disabled = i <= 0; $("next").disabled = i < 0 || i >= currentList.length - 1;
+  document.dispatchEvent(new CustomEvent("kakuu:show", { detail: { d } }));
 }
 function openDialog(k, from) { openFrom = from || null; $("scrim").hidden = false; show(k); $("close").focus(); }
-function closeDialog() { const v = $("video"); v.pause(); v.removeAttribute("src"); v.load(); $("scrim").hidden = true; if (marksChanged) { marksChanged = false; update(); } if (openFrom && document.contains(openFrom)) openFrom.focus(); }
+function closeDialog() { document.dispatchEvent(new CustomEvent("kakuu:close")); const v = $("video"); v.pause(); v.removeAttribute("src"); v.load(); $("scrim").hidden = true; if (marksChanged) { marksChanged = false; update(); } if (openFrom && document.contains(openFrom)) openFrom.focus(); }
 function step(n) { const i = currentList.findIndex((x) => x.k === openKey); const t = currentList[i + n]; if (t) show(t.k); }
 $("close").addEventListener("click", closeDialog);
 $("prev").addEventListener("click", () => step(-1));
@@ -450,7 +470,7 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === "ArrowLeft") step(-1);
   else if (e.key === "ArrowRight") step(1);
   else if (e.key === "Tab") {
-    const f = [...$("sheet").querySelectorAll("button:not(:disabled), video")];
+    const f = [...$("sheet").querySelectorAll("button:not(:disabled), video")].filter((el) => el.offsetParent !== null);
     if (!f.length) return;
     const first = f[0], last = f[f.length - 1];
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -460,5 +480,8 @@ document.addEventListener("keydown", (e) => {
 
 update();
 </script>
+<script src="check.js"></script>
+<script src="data.js"></script>
+<script src="practice.js"></script>
 </body>
 </html>
