@@ -171,8 +171,8 @@ h1 .mark { color: var(--accent); }
 .sheet-body { padding: 12px 18px 18px; display: grid; gap: 10px; }
 .speed { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .speed .chip { height: 40px; }
-.facts { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 15px; }
-.facts dt { color: var(--ink-2); font-size: 13px; padding-top: 2px; }
+.facts { margin: 0; display: grid; grid-template-columns: auto 1fr auto; gap: 6px 12px; align-items: center; font-size: 15px; }
+.facts dt { color: var(--ink-2); font-size: 13px; }
 .facts dd { margin: 0; }
 .note { margin: 0; padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); color: var(--ink); font-size: 14px; }
 
@@ -261,38 +261,39 @@ h1 .mark { color: var(--accent); }
 <script>
 /* ---- data: add one object per kanji; put its video in videos/ ---- */
 const KANJI = [
-  { k: "雨", on: ["ウ"], kun: ["あめ", "あま"], words: [["大雨", "おおあめ"], ["小雨", "こさめ"], ["雨天", "うてん"]],
+  { k: "雨", on: ["ウ"], kun: ["あめ", "あま"], mean: "そらから ふって くる みず", ex: ["雨が ふって きた", "あめが ふって きた"], words: [["大雨", "おおあめ"], ["小雨", "こさめ"], ["雨天", "うてん"]],
     grade: 1, strokes: 8, video: "videos/ame.mp4", note: "" },
-  { k: "字", on: ["ジ"], kun: [], words: [["文字", "もじ"], ["十字", "じゅうじ"], ["赤字", "あかじ"]],
+  { k: "字", on: ["ジ"], kun: [], mean: "ことばを かく ための しるし。もじ", ex: ["字を ゆっくり かく", "じを ゆっくり かく"], words: [["文字", "もじ"], ["十字", "じゅうじ"], ["赤字", "あかじ"]],
     grade: 1, strokes: 6, video: "videos/ji.mp4", note: "" },
-  { k: "水", on: ["スイ"], kun: ["みず"], words: [["水", "みず"], ["水玉", "みずたま"], ["水田", "すいでん"]],
+  { k: "水", on: ["スイ"], kun: ["みず"], mean: "のむ みず。かわや うみの みず", ex: ["水を のむ", "みずを のむ"], words: [["水", "みず"], ["水玉", "みずたま"], ["水田", "すいでん"]],
     grade: 1, strokes: 4, video: "videos/sui.mp4", note: "" },
-  { k: "大", on: ["ダイ", "タイ"], kun: ["おお", "おおきい"], words: [["大きい", "おおきい"], ["大雨", "おおあめ"], ["大小", "だいしょう"]],
+  { k: "大", on: ["ダイ", "タイ"], kun: ["おお", "おおきい"], mean: "おおきい こと", ex: ["大きい きを 見た", "おおきい きを みた"], words: [["大きい", "おおきい"], ["大雨", "おおあめ"], ["大小", "だいしょう"]],
     grade: 1, strokes: 3, video: "videos/dai.mp4", note: "" },
-  { k: "一", on: ["イチ", "イツ"], kun: ["ひと", "ひとつ"], words: [["一つ", "ひとつ"], ["一人", "ひとり"], ["一年", "いちねん"]],
+  { k: "一", on: ["イチ", "イツ"], kun: ["ひと", "ひとつ"], mean: "ひとつ。かずの 1", ex: ["一つ ください", "ひとつ ください"], words: [["一つ", "ひとつ"], ["一人", "ひとり"], ["一年", "いちねん"]],
     grade: 1, strokes: 1, video: "videos/ichi.mp4", note: "" },
-  { k: "二", on: ["ニ"], kun: ["ふた", "ふたつ"], words: [["二つ", "ふたつ"], ["二人", "ふたり"], ["二日", "ふつか"]],
+  { k: "二", on: ["ニ"], kun: ["ふた", "ふたつ"], mean: "ふたつ。かずの 2", ex: ["二つ たべた", "ふたつ たべた"], words: [["二つ", "ふたつ"], ["二人", "ふたり"], ["二日", "ふつか"]],
     grade: 1, strokes: 2, video: "videos/ni.mp4", note: "" },
-  { k: "三", on: ["サン"], kun: ["み", "みっつ"], words: [["三つ", "みっつ"], ["三日", "みっか"], ["三月", "さんがつ"]],
+  { k: "三", on: ["サン"], kun: ["み", "みっつ"], mean: "みっつ。かずの 3", ex: ["三つ ならべる", "みっつ ならべる"], words: [["三つ", "みっつ"], ["三日", "みっか"], ["三月", "さんがつ"]],
     grade: 1, strokes: 3, video: "videos/san.mp4", note: "" },
-  { k: "十", on: ["ジュウ", "ジッ"], kun: ["とお", "と"], words: [["十", "とお"], ["十人", "じゅうにん"], ["十日", "とおか"]],
+  { k: "十", on: ["ジュウ", "ジッ"], kun: ["とお", "と"], mean: "とお。かずの 10", ex: ["十まで かぞえる", "とおまで かぞえる"], words: [["十", "とお"], ["十人", "じゅうにん"], ["十日", "とおか"]],
     grade: 1, strokes: 2, video: "videos/juu.mp4", note: "" },
-  { k: "八", on: ["ハチ"], kun: ["や", "やっつ"], words: [["八つ", "やっつ"], ["八百", "はっぴゃく"], ["八日", "ようか"]],
+  { k: "八", on: ["ハチ"], kun: ["や", "やっつ"], mean: "やっつ。かずの 8", ex: ["おかしが 八つ ある", "おかしが やっつ ある"], words: [["八つ", "やっつ"], ["八百", "はっぴゃく"], ["八日", "ようか"]],
     grade: 1, strokes: 2, video: "videos/hachi.mp4", note: "" },
-  { k: "力", on: ["リョク", "リキ"], kun: ["ちから"], words: [["力", "ちから"], ["力もち", "ちからもち"], ["学力", "がくりょく"]],
+  { k: "力", on: ["リョク", "リキ"], kun: ["ちから"], mean: "からだの ちから。ちからが つよい こと", ex: ["力を 入れて もつ", "ちからを いれて もつ"], words: [["力", "ちから"], ["力もち", "ちからもち"], ["学力", "がくりょく"]],
     grade: 1, strokes: 2, video: "videos/chikara.mp4", note: "" },
-  { k: "人", on: ["ジン", "ニン"], kun: ["ひと"], words: [["人", "ひと"], ["大人", "おとな"], ["人口", "じんこう"]],
+  { k: "人", on: ["ジン", "ニン"], kun: ["ひと"], mean: "ひと。にんげん", ex: ["人が たくさん いる", "ひとが たくさん いる"], words: [["人", "ひと"], ["大人", "おとな"], ["人口", "じんこう"]],
     grade: 1, strokes: 2, video: "videos/hito.mp4", note: "" },
-  { k: "入", on: ["ニュウ"], kun: ["い", "はい"], words: [["入る", "はいる"], ["入口", "いりぐち"], ["入学", "にゅうがく"]],
+  { k: "入", on: ["ニュウ"], kun: ["い", "はい"], mean: "そとから なかへ はいる こと", ex: ["へやに 入る", "へやに はいる"], words: [["入る", "はいる"], ["入口", "いりぐち"], ["入学", "にゅうがく"]],
     grade: 1, strokes: 2, video: "videos/nyuu.mp4", note: "" },
-  { k: "小", on: ["ショウ"], kun: ["ちい", "こ", "お"], words: [["小さい", "ちいさい"], ["小雨", "こさめ"], ["小学校", "しょうがっこう"]],
+  { k: "小", on: ["ショウ"], kun: ["ちい", "こ", "お"], mean: "ちいさい こと", ex: ["小さい 字を かく", "ちいさい じを かく"], words: [["小さい", "ちいさい"], ["小雨", "こさめ"], ["小学校", "しょうがっこう"]],
     grade: 1, strokes: 3, video: "videos/shou.mp4", note: "" }
 ];
 
 /* kana & numbers: [char, romaji/reading, strokes] — video file is videos/<prefix>_<romaji>.mp4 */
 const KANA = {"h": [["あ", "a", 3], ["い", "i", 2], ["う", "u", 2], ["え", "e", 2], ["お", "o", 3], ["か", "ka", 3], ["き", "ki", 4], ["く", "ku", 1], ["け", "ke", 3], ["こ", "ko", 2], ["さ", "sa", 3], ["し", "shi", 1], ["す", "su", 2], ["せ", "se", 3], ["そ", "so", 2], ["た", "ta", 4], ["ち", "chi", 2], ["つ", "tsu", 1], ["て", "te", 1], ["と", "to", 2], ["な", "na", 4], ["に", "ni", 3], ["ぬ", "nu", 2], ["ね", "ne", 2], ["の", "no", 1], ["は", "ha", 3], ["ひ", "hi", 1], ["ふ", "fu", 4], ["へ", "he", 1], ["ほ", "ho", 4], ["ま", "ma", 3], ["み", "mi", 2], ["む", "mu", 3], ["め", "me", 2], ["も", "mo", 3], ["や", "ya", 3], ["ゆ", "yu", 2], ["よ", "yo", 2], ["ら", "ra", 2], ["り", "ri", 2], ["る", "ru", 2], ["れ", "re", 2], ["ろ", "ro", 1], ["わ", "wa", 2], ["を", "wo", 3], ["ん", "n", 1]], "k": [["ア", "a", 2], ["イ", "i", 2], ["ウ", "u", 3], ["エ", "e", 3], ["オ", "o", 3], ["カ", "ka", 2], ["キ", "ki", 3], ["ク", "ku", 2], ["ケ", "ke", 3], ["コ", "ko", 2], ["サ", "sa", 3], ["シ", "shi", 3], ["ス", "su", 2], ["セ", "se", 2], ["ソ", "so", 2], ["タ", "ta", 3], ["チ", "chi", 3], ["ツ", "tsu", 3], ["テ", "te", 3], ["ト", "to", 2], ["ナ", "na", 2], ["ニ", "ni", 2], ["ヌ", "nu", 2], ["ネ", "ne", 4], ["ノ", "no", 1], ["ハ", "ha", 2], ["ヒ", "hi", 2], ["フ", "fu", 1], ["ヘ", "he", 1], ["ホ", "ho", 4], ["マ", "ma", 2], ["ミ", "mi", 3], ["ム", "mu", 2], ["メ", "me", 2], ["モ", "mo", 3], ["ヤ", "ya", 2], ["ユ", "yu", 2], ["ヨ", "yo", 3], ["ラ", "ra", 2], ["リ", "ri", 2], ["ル", "ru", 2], ["レ", "re", 1], ["ロ", "ro", 3], ["ワ", "wa", 2], ["ヲ", "wo", 3], ["ン", "n", 2]], "n": [["0", "ぜろ", 1], ["1", "いち", 2], ["2", "に", 1], ["3", "さん", 1], ["4", "よん", 2], ["5", "ご", 2], ["6", "ろく", 1], ["7", "なな", 1], ["8", "はち", 1], ["9", "きゅう", 2]]};
-KANA.h.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "hiragana", on: [], kun: [], words: [], grade: 0, strokes: n, video: `videos/h_${r}.mp4`, note: "", ord: i, sub: r }));
-KANA.k.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "katakana", on: [], kun: [], words: [], grade: 0, strokes: n, video: `videos/k_${r}.mp4`, note: "", ord: i, sub: r }));
+const KANA_EX = {"あ": "あめ", "い": "いぬ", "う": "うさぎ", "え": "えんぴつ", "お": "おにぎり", "か": "かさ", "き": "きつね", "く": "くるま", "け": "けむし", "こ": "こま", "さ": "さかな", "し": "しか", "す": "すいか", "せ": "せみ", "そ": "そら", "た": "たこ", "ち": "ちず", "つ": "つくえ", "て": "てがみ", "と": "とり", "な": "なす", "に": "にく", "ぬ": "ぬいぐるみ", "ね": "ねこ", "の": "のり", "は": "はな", "ひ": "ひこうき", "ふ": "ふね", "へ": "へび", "ほ": "ほし", "ま": "まど", "み": "みかん", "む": "むし", "め": "めがね", "も": "もも", "や": "やま", "ゆ": "ゆき", "よ": "よる", "ら": "らっぱ", "り": "りんご", "る": "るすばん", "れ": "れんこん", "ろ": "ろば", "わ": "わに", "ア": "アイス", "イ": "インク", "ウ": "ウインナー", "エ": "エプロン", "オ": "オレンジ", "カ": "カメラ", "キ": "キウイ", "ク": "クッキー", "ケ": "ケーキ", "コ": "コップ", "サ": "サラダ", "シ": "シーソー", "ス": "スプーン", "セ": "セーター", "ソ": "ソファ", "タ": "タオル", "チ": "チーズ", "ツ": "ツリー", "テ": "テレビ", "ト": "トマト", "ナ": "ナイフ", "ニ": "ニュース", "ヌ": "ヌードル", "ネ": "ネクタイ", "ノ": "ノート", "ハ": "ハンカチ", "ヒ": "ヒーター", "フ": "フォーク", "ヘ": "ヘリコプター", "ホ": "ホテル", "マ": "マスク", "ミ": "ミルク", "ム": "ムース", "メ": "メロン", "モ": "モップ", "ヤ": "ヤッホー", "ユ": "ユニフォーム", "ヨ": "ヨット", "ラ": "ラジオ", "リ": "リボン", "ル": "ルール", "レ": "レモン", "ロ": "ロケット", "ワ": "ワニ", "を": "ほんを", "ん": "みかん", "ン": "ペン"};
+KANA.h.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "hiragana", on: [], kun: [], words: [], ex: KANA_EX[c] ? [KANA_EX[c], KANA_EX[c]] : null, grade: 0, strokes: n, video: `videos/h_${r}.mp4`, note: "", ord: i, sub: r }));
+KANA.k.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "katakana", on: [], kun: [], words: [], ex: KANA_EX[c] ? [KANA_EX[c], KANA_EX[c]] : null, grade: 0, strokes: n, video: `videos/k_${r}.mp4`, note: "", ord: i, sub: r }));
 KANA.n.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "number", on: [], kun: [], words: [], grade: 0, strokes: n, video: `videos/n_${c}.mp4`, note: "", ord: i, sub: r }));
 
 /* tabs: each entry in KANJI carries cat (default "kanji"). Hiragana / katakana / numbers use the same fields. */
@@ -442,11 +443,13 @@ function show(k) {
   v.play().catch(() => {});
   /* watching a video counts as "みた" (never overrides おぼえた) */
   if (!marks[k]) { marks[k] = "practice"; saveMarks(); marksChanged = true; }
-  const words = d.words.map(([w, r]) => `${esc(w)}(${esc(r)})`).join("、");
-  $("facts").innerHTML = d.sub ? `<dt>よみ</dt><dd>${esc(d.sub.split(" ")[0])}</dd>` :
-    (d.on.length ? `<dt>おんよみ</dt><dd>${esc(d.on.join("、"))}</dd>` : "") +
-    (d.kun.length ? `<dt>くんよみ</dt><dd>${esc(d.kun.join("、"))}</dd>` : "") +
-    `<dt>ことば</dt><dd>${words}</dd>`;
+  const row = (label, text, say, mute) => `<dt>${label}</dt><dd>${esc(text)}</dd><dd class="spk" data-say="${esc(say)}" data-label="${label}"${mute ? " data-mute=\"1\"" : ""}></dd>`;
+  $("facts").innerHTML = d.cat === "number" ? row("よみ", d.sub.split(" ")[0], d.sub.split(" ")[0]) :
+    d.sub ? row("よみ", d.k, d.k) + (d.ex ? row("ことば", d.ex[0], d.ex[1]) : "") :
+    (d.on.length ? row("おんよみ", d.on.join("、"), d.on.join("、")) : "") +
+    (d.kun.length ? row("くんよみ", d.kun.join("、"), d.kun.join("、")) : "") +
+    (d.ex ? row("れい", d.ex[0], d.ex[1]) : "") +
+    (d.mean ? row("いみ", d.mean, "", true) : "");
   $("note").hidden = !d.note; $("note").textContent = d.note || "";
   const i = currentList.findIndex((x) => x.k === k);
   $("prev").disabled = i <= 0; $("next").disabled = i < 0 || i >= currentList.length - 1;

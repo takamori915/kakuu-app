@@ -1,9 +1,9 @@
 /* れんしゅう(なぞる/みないで かく)・よみあげ・せってい */
 .modes { display: flex; gap: 8px; padding: 0 18px 10px; }
 .modes .chip { height: 42px; min-width: 96px; font-weight: 700; }
-.modes[hidden], .practice[hidden], .say-row[hidden], .video-box[hidden], .speed[hidden] { display: none; }
+.modes[hidden], .prac-panel[hidden], .say-row[hidden], .video-box[hidden], .speed[hidden] { display: none; }
 
-.practice { padding: 0 18px 4px; display: grid; gap: 10px; justify-items: center; }
+.prac-panel { padding: 0 18px 4px; display: grid; gap: 10px; justify-items: center; }
 .stages { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .stages .chip { height: 40px; }
 .pad-wrap { width: min(100%, 440px); aspect-ratio: 1; position: relative; }
@@ -24,8 +24,12 @@
 
 .say-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .say-row .pbtn { min-height: 42px; padding: 0 12px; font-size: 14px; }
-.say-row .word { font-weight: 500; }
-.facts.masked dd { filter: blur(7px); user-select: none; }
+.say-row { align-items: center; }
+.quiz-msg { margin: 0; font-weight: 700; color: var(--ink-2); min-height: 1.4em; }
+.facts dd.spk { display: flex; }
+.spk-btn { width: 40px; height: 40px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--card); font-size: 18px; line-height: 1; cursor: pointer; padding: 0; }
+.facts .now { color: var(--accent, #1b7fb5); font-weight: 700; }
+.facts dt.now { color: inherit; }
 
 .foot .link-btn { margin-top: 8px; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--card); font-weight: 700; }
 

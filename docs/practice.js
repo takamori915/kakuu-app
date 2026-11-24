@@ -36,7 +36,7 @@
   videoBox.before(modes);
 
   const panel = document.createElement("div");
-  panel.className = "practice"; panel.id = "practice"; panel.hidden = true;
+  panel.className = "prac-panel"; panel.id = "practice"; panel.hidden = true;
   panel.innerHTML = `
     <div class="stages" role="group" aria-label="れんしゅうの だんかい">
       <button class="chip" type="button" data-stage="1" aria-pressed="true">① なぞる</button>
@@ -217,34 +217,69 @@
 
   /* ---------- よみあげ・こえに だす ---------- */
   const canSpeak = "speechSynthesis" in window;
-  function speak(text) {
-    if (!settings.speech || !canSpeak || !text) return;
-    try {
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text); u.lang = "ja-JP"; u.rate = 0.85;
-      const v = speechSynthesis.getVoices().find((x) => /^ja/i.test(x.lang)); if (v) u.voice = v;
-      speechSynthesis.speak(u);
-    } catch (e) { /* 読み上げできない端末 */ }
+  /* 読み上げ: 終わるまで待てる版(iOSで onend が来ない時のために保険のタイマーつき) */
+  let runId = 0;
+  function say(text) {
+    return new Promise((res) => {
+      if (!canSpeak || !text) return res();
+      let ended = false; const fin = () => { if (!ended) { ended = true; res(); } };
+      try {
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text); u.lang = "ja-JP"; u.rate = 0.85;
+        const v = speechSynthesis.getVoices().find((x) => /^ja/i.test(x.lang)); if (v) u.voice = v;
+        u.onend = fin; u.onerror = fin;
+        speechSynthesis.speak(u);
+        setTimeout(fin, 1500 + text.length * 450);
+      } catch (e) { fin(); }
+    });
   }
-  const readingText = (d) => d.sub ? d.sub.split(" ")[0]
-    : `${d.on.length ? "おんよみ、" + d.on.join("、") + "。" : ""}${d.kun.length ? "くんよみ、" + d.kun.join("、") + "。" : ""}`;
-  let masked = false;
-  function buildSayRow() {
-    sayRow.hidden = !(canSpeak && settings.speech && cur);
-    if (sayRow.hidden) { facts.classList.remove("masked"); return; }
-    masked = false; facts.classList.remove("masked");
-    const words = (cur.words || []).map(([w, r]) => `<button class="pbtn word" type="button" data-say="${esc(r)}">🔊 ${esc(w)}</button>`).join("");
-    sayRow.innerHTML = `<button class="pbtn" type="button" data-act="read">🔊 よみを きく</button>
-      <button class="pbtn" type="button" data-act="quiz">🗣 こえに だして よんでみよう</button>${words}`;
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const WAIT = { "おんよみ": 3, "くんよみ": 3, "よみ": 3, "ことば": 3, "れい": 5, "いみ": 4 };
+
+  function stopQuiz() {
+    runId++;
+    if (canSpeak) { try { speechSynthesis.cancel(); } catch (e) { /* */ } }
+    facts.querySelectorAll(".now").forEach((x) => x.classList.remove("now"));
+    quizBtn.textContent = QUIZ_LABEL; quizBtn.dataset.run = "";
+    quizMsg.textContent = "";
   }
-  sayRow.addEventListener("click", (e) => {
-    const b = e.target.closest("button"); if (!b || !cur) return;
-    if (b.dataset.say) return speak(b.dataset.say);
-    if (b.dataset.act === "read") return speak(readingText(cur));
-    if (b.dataset.act === "quiz") {
-      if (!masked) { masked = true; facts.classList.add("masked"); b.textContent = "✅ こたえを きく"; }
-      else { masked = false; facts.classList.remove("masked"); b.textContent = "🗣 こえに だして よんでみよう"; speak(readingText(cur)); }
+  async function runQuiz() {
+    const id = ++runId, rows = [...facts.querySelectorAll(".spk")];
+    quizBtn.textContent = "■ とめる"; quizBtn.dataset.run = "1";
+    for (const cell of rows) {
+      if (id !== runId) return;
+      const label = cell.dataset.label, secs = WAIT[label] || 3;
+      const els = [cell.previousElementSibling, cell.previousElementSibling.previousElementSibling];
+      facts.querySelectorAll(".now").forEach((x) => x.classList.remove("now"));
+      els.forEach((x) => x.classList.add("now"));
+      quizMsg.textContent = `${label}を よんでね`;
+      await say(label);
+      for (let t = secs; t > 0; t--) { if (id !== runId) return; quizMsg.textContent = `${label}を よんでね … ${t}`; await wait(1000); }
     }
+    if (id !== runId) return;
+    await say("よく できました");
+    stopQuiz(); quizMsg.textContent = "よく できました!";
+  }
+
+  const QUIZ_LABEL = "🗣 こえに だして よんでみよう";
+  const quizBtn = document.createElement("button");
+  quizBtn.className = "pbtn"; quizBtn.type = "button"; quizBtn.textContent = QUIZ_LABEL;
+  const quizMsg = document.createElement("p");
+  quizMsg.className = "quiz-msg"; quizMsg.setAttribute("aria-live", "polite");
+  sayRow.append(quizBtn, quizMsg);
+  quizBtn.addEventListener("click", () => { if (quizBtn.dataset.run) stopQuiz(); else runQuiz(); });
+
+  function buildSayRow() {
+    stopQuiz();
+    const on = !!(canSpeak && settings.speech && cur);
+    sayRow.hidden = !on;
+    facts.querySelectorAll(".spk").forEach((c) => {
+      c.innerHTML = on && !c.dataset.mute ? `<button class="spk-btn" type="button" aria-label="${c.dataset.label}を きく">🔊</button>` : "";
+    });
+  }
+  facts.addEventListener("click", (e) => {
+    const b = e.target.closest(".spk-btn"); if (!b) return;
+    stopQuiz(); say(b.parentElement.dataset.say);
   });
 
   /* ---------- 本体との連携 ---------- */
@@ -254,7 +289,7 @@
     buildSayRow();
     if (mode === "practice" && !modes.hidden) setMode("practice"); else setMode("video");
   });
-  document.addEventListener("kakuu:close", () => { cur = null; if (canSpeak) { try { speechSynthesis.cancel(); } catch (e) { /* */ } } });
+  document.addEventListener("kakuu:close", () => { cur = null; stopQuiz(); });
   new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
   /* ---------- せってい・きろく ---------- */
