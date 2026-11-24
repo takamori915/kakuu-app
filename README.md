@@ -26,6 +26,7 @@
 - `docs/practice.js` / `docs/practice.css` … れんしゅうの画面
 - `docs/strokes.json` … 各字の線のデータ。`tools/export_strokes.py` で作る(動画と同じデータ)
 - `tools/kanji_more.py` … 1年生の漢字の線のデータ(一二三十八力人入小)
+- `tools/alpha_data.py` … 英語(A〜Z・a〜z)の線のデータと、ことば(絵文字つき)。動画は `tools/render_alpha.py` で `docs/videos/u_A.mp4` `l_a.mp4` を作る
 
 ### テスト
 ```

@@ -78,7 +78,7 @@ h1 .mark { color: var(--accent); }
   border-bottom: 1px solid var(--line);
   display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px;
 }
-.tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .tab {
   min-height: 48px; padding: 4px 2px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--card);
   display: grid; justify-items: center; align-content: center; line-height: 1.2; font-size: 16px; font-weight: 700;
@@ -102,6 +102,7 @@ h1 .mark { color: var(--accent); }
 
 .filters { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
 .frow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.frow[hidden] { display: none; }
 .flabel { flex: none; width: 3.4em; font-size: 12px; color: var(--ink-2); }
 .chips { display: flex; gap: 6px; overflow-x: auto; padding: 2px 1px 4px; scrollbar-width: thin; min-width: 0; flex: 1; }
 .chip {
@@ -164,6 +165,7 @@ h1 .mark { color: var(--accent); }
 .sheet-head { display: flex; align-items: center; gap: 10px; padding: 12px 12px 8px 18px; }
 .sheet-head h2 { margin: 0; font-size: 20px; flex: 1; min-width: 0; }
 .sheet-head h2 .k { font-family: var(--font-kanji); font-size: 30px; margin-right: 8px; color: var(--accent); }
+.kanji.latin, .sheet-head h2 .k.latin { font-family: "Helvetica Neue", Arial, "Noto Sans", "Segoe UI", sans-serif; font-weight: 500; }
 .icon-btn { width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--card); font-size: 20px; line-height: 1; }
 .icon-btn:disabled { opacity: .35; cursor: default; }
 .video-box { background: #fff; aspect-ratio: 16 / 9; width: 100%; }
@@ -176,6 +178,7 @@ h1 .mark { color: var(--accent); }
 .facts dd { margin: 0; }
 .facts dd.has-pic { display: flex; align-items: center; gap: 10px; }
 .facts .pic { font-size: 40px; line-height: 1; flex: none; }
+.facts .jp { display: block; font-size: 12px; color: var(--ink-2); margin-top: 2px; }
 .note { margin: 0; padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); color: var(--ink); font-size: 14px; }
 
 @media (max-width: 420px) {
@@ -297,9 +300,16 @@ const KANA_EX = {"あ": ["あめ", "あめ", "☔"], "い": ["いぬ", "いぬ",
 KANA.h.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "hiragana", on: [], kun: [], words: [], ex: KANA_EX[c] || null, grade: 0, strokes: n, video: `videos/h_${r}.mp4`, note: "", ord: i, sub: r }));
 KANA.k.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "katakana", on: [], kun: [], words: [], ex: KANA_EX[c] || null, grade: 0, strokes: n, video: `videos/k_${r}.mp4`, note: "", ord: i, sub: r }));
 KANA.n.forEach(([c, r, n], i) => KANJI.push({ k: c, cat: "number", on: [], kun: [], words: [], grade: 0, strokes: n, video: `videos/n_${c}.mp4`, note: "", ord: i, sub: r }));
+/* 英語 A〜Z(おおもじ / こもじ): [よみ(カタカナ), ことば, にほんご, 絵] */
+const ALPHA = {"A": ["エイ", "Apple", "りんご", "🍎"], "B": ["ビー", "Banana", "バナナ", "🍌"], "C": ["シー", "Cat", "ねこ", "🐱"], "D": ["ディー", "Dog", "いぬ", "🐶"], "E": ["イー", "Egg", "たまご", "🥚"], "F": ["エフ", "Fish", "さかな", "🐟"], "G": ["ジー", "Grape", "ぶどう", "🍇"], "H": ["エイチ", "Hat", "ぼうし", "🎩"], "I": ["アイ", "Ice", "こおり", "🧊"], "J": ["ジェイ", "Juice", "ジュース", "🧃"], "K": ["ケイ", "Key", "かぎ", "🔑"], "L": ["エル", "Lemon", "レモン", "🍋"], "M": ["エム", "Moon", "つき", "🌙"], "N": ["エヌ", "Nose", "はな", "👃"], "O": ["オウ", "Orange", "オレンジ", "🍊"], "P": ["ピー", "Pig", "ぶた", "🐷"], "Q": ["キュー", "Queen", "じょおう", "👸"], "R": ["アール", "Rabbit", "うさぎ", "🐰"], "S": ["エス", "Sun", "たいよう", "☀️"], "T": ["ティー", "Tiger", "とら", "🐯"], "U": ["ユー", "Umbrella", "かさ", "☂️"], "V": ["ヴィー", "Violin", "バイオリン", "🎻"], "W": ["ダブリュー", "Whale", "くじら", "🐳"], "X": ["エックス", "Box", "はこ", "📦"], "Y": ["ワイ", "Yellow", "きいろ", "💛"], "Z": ["ズィー", "Zebra", "しまうま", "🦓"]};
+const ASTROKES = {"u": [3, 3, 1, 2, 4, 3, 2, 3, 1, 1, 3, 2, 4, 3, 1, 2, 2, 3, 1, 2, 1, 1, 1, 2, 3, 3], "l": [2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 3, 1, 3, 2, 1, 2, 2, 2, 1, 2, 2, 1, 1, 2, 2, 3]};
+[["upper", "u"], ["lower", "l"]].forEach(([cat, t]) => "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach((c, i) => {
+  const [name, w, jp, e] = ALPHA[c], k = t === "u" ? c : c.toLowerCase();
+  KANJI.push({ k, cat, on: [], kun: [], words: [], grade: 0, strokes: ASTROKES[t][i], video: `videos/${t}_${k}.mp4`, note: "", ord: i, alpha: { name, w: t === "u" ? w : w.toLowerCase(), jp, e } });
+}));
 
 /* tabs: each entry in KANJI carries cat (default "kanji"). Hiragana / katakana / numbers use the same fields. */
-const CATS = [["hiragana", "ひらがな"], ["katakana", "カタカナ"], ["number", "すうじ"], ["kanji", "かんじ"]];
+const CATS = [["hiragana", "ひらがな"], ["katakana", "カタカナ"], ["number", "すうじ"], ["kanji", "かんじ"], ["upper", "ABC"], ["lower", "abc"]];
 const ROWS = [["あ", "あいうえお"], ["か", "かきくけこがぎぐげご"], ["さ", "さしすせそざじずぜぞ"], ["た", "たちつてとだぢづでど"],
   ["な", "なにぬねの"], ["は", "はひふへほばびぶべぼぱぴぷぺぽ"], ["ま", "まみむめも"], ["や", "やゆよ"], ["ら", "らりるれろ"], ["わ", "わをん"]];
 
@@ -317,7 +327,7 @@ KANJI.forEach((d) => {
   if (d.cat === "number") d.sub += { "0": " れい まる", "4": " し", "7": " しち", "9": " く" }[d.k] || "";
   d.sortKey = norm(d.kun[0] || d.on[0] || "");
   d.rows = isKana ? [rowOf(d.k)].filter(Boolean) : [...new Set(reads.map(rowOf).filter(Boolean))];
-  d.hay = norm([d.k, ...reads, ...d.words.flat(), d.strokes + "画", d.strokes + "かく", d.grade ? d.grade + "年" + d.grade + "ねん" : "", d.sub || ""].join(" "));
+  d.hay = norm([d.k, ...reads, ...d.words.flat(), ...(d.alpha ? [d.alpha.name, d.alpha.w, d.alpha.jp] : []), d.strokes + "画", d.strokes + "かく", d.grade ? d.grade + "年" + d.grade + "ねん" : "", d.sub || ""].join(" "));
   d.direct = [d.k, ...reads, ...(d.sub ? d.sub.split(" ") : [])].map(norm);   /* the kanji itself and its readings, for ranking */
 });
 
@@ -371,6 +381,7 @@ function renderTabs() {
 }
 function renderFilters() {
   const rows = ROWS.map((r) => r[0]).filter((r) => pool().some((d) => d.rows.includes(r)));
+  $("rows").parentElement.hidden = state.cat === "upper" || state.cat === "lower";
   chipGroup($("rows"), [["", "ぜんぶ"], ...rows.map((r) => [r, r + "ぎょう"])], state.row || "", (v) => { state.row = v || null; update(); });
   const ss = [...new Set(pool().map((d) => d.strokes))].sort((a, b) => a - b);
   chipGroup($("strokes"), [["", "ぜんぶ"], ...ss.map((n) => [n, n + "かく"])], state.strokes || "", (v) => { state.strokes = v ? Number(v) : null; update(); });
@@ -378,10 +389,10 @@ function renderFilters() {
 }
 function cardHTML(d) {
   const m = marks[d.k] || "";
-  const reads = d.sub ? `よみ <b>${esc(d.sub.split(" ")[0])}</b>` : [d.on.length ? `おん <b>${esc(d.on.join("・"))}</b>` : "", d.kun.length ? `くん <b>${esc(d.kun.join("・"))}</b>` : ""].filter(Boolean).join("<br>");
+  const reads = d.alpha ? `<b>${esc(d.alpha.e)} ${esc(d.alpha.w)}</b><br>${esc(d.alpha.name)}` : d.sub ? `よみ <b>${esc(d.sub.split(" ")[0])}</b>` : [d.on.length ? `おん <b>${esc(d.on.join("・"))}</b>` : "", d.kun.length ? `くん <b>${esc(d.kun.join("・"))}</b>` : ""].filter(Boolean).join("<br>");
   return `<li class="card" data-status="${esc(m)}">
     <button class="open" type="button" data-open="${esc(d.k)}" aria-label="${esc(d.k)}の かきじゅんを みる">
-      <span class="square"><span class="kanji">${esc(d.k)}</span></span>
+      <span class="square"><span class="kanji${d.alpha ? " latin" : ""}">${esc(d.k)}</span></span>
       <span class="meta"><span class="tag">${d.strokes}かく</span>${d.grade ? `<span class="tag plain">${d.grade}ねん</span>` : ""}</span>
       <span class="reads">${reads}</span>
       <span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>かきじゅんを みる</span>
@@ -403,6 +414,7 @@ function renderList() {
   $("count").innerHTML = `ぜんぶで <b>${total}</b>こ ・ いま <b>${list.length}</b>こ ・ みた <b>${nP}</b> ・ おぼえた <b>${nD}</b>`;
   $("qclear").hidden = !state.q;
   document.querySelectorAll(".sort button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.sort === state.sort)));
+  const kb = document.querySelector('.sort [data-sort="kana"]'); if (kb) kb.textContent = state.cat === "upper" || state.cat === "lower" ? "ABC順" : "あいうえお順";
   return list;
 }
 function update() { renderTabs(); renderFilters(); currentList = renderList(); }
@@ -439,14 +451,15 @@ let openFrom = null, openKey = null, marksChanged = false;
 function show(k) {
   const d = KANJI.find((x) => x.k === k); if (!d) return;
   openKey = k;
-  $("dtitle").innerHTML = `<span class="k">${esc(d.k)}</span>${d.strokes}かく${d.grade ? ` ・ ${d.grade}ねん` : ""}`;
+  $("dtitle").innerHTML = `<span class="k${d.alpha ? " latin" : ""}">${esc(d.k)}</span>${d.strokes}かく${d.grade ? ` ・ ${d.grade}ねん` : ""}`;
   const v = $("video");
   v.src = d.video; v.playbackRate = Number(document.querySelector(".speed .chip[aria-pressed=true]").dataset.rate);
   v.play().catch(() => {});
   /* watching a video counts as "みた" (never overrides おぼえた) */
   if (!marks[k]) { marks[k] = "practice"; saveMarks(); marksChanged = true; }
-  const row = (label, text, say, mute, pic) => `<dt>${label}</dt><dd${pic ? " class=\"has-pic\"" : ""}>${pic ? `<span class="pic" aria-hidden="true">${pic}</span>` : ""}<span>${esc(text)}</span></dd><dd class="spk" data-say="${esc(say)}" data-label="${label}"${mute ? " data-mute=\"1\"" : ""}></dd>`;
-  $("facts").innerHTML = d.cat === "number" ? row("よみ", d.sub.split(" ")[0], d.sub.split(" ")[0]) :
+  const row = (label, text, say, mute, pic, small, lang) => `<dt>${label}</dt><dd${pic ? " class=\"has-pic\"" : ""}>${pic ? `<span class="pic" aria-hidden="true">${pic}</span>` : ""}<span>${esc(text)}${small ? `<small class="jp">${esc(small)}</small>` : ""}</span></dd><dd class="spk" data-say="${esc(say)}" data-label="${label}"${mute ? " data-mute=\"1\"" : ""}${lang ? ` data-lang="${lang}"` : ""}></dd>`;
+  $("facts").innerHTML = d.alpha ? row("よみ", d.alpha.name, d.k.toUpperCase(), false, "", "", "en-US") + row("ことば", d.alpha.w, d.alpha.w, false, d.alpha.e, d.alpha.jp, "en-US") :
+    d.cat === "number" ? row("よみ", d.sub.split(" ")[0], d.sub.split(" ")[0]) :
     d.sub ? row("よみ", d.k, d.k) + (d.ex ? row("ことば", d.ex[0], d.ex[1], false, d.ex[2]) : "") :
     (d.on.length ? row("おんよみ", d.on.join("、"), d.on.join("、")) : "") +
     (d.kun.length ? row("くんよみ", d.kun.join("、"), d.kun.join("、")) : "") +

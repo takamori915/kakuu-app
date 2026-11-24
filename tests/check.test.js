@@ -84,3 +84,29 @@ test("書き終えた画は、次の画の判定で無視される", () => {
   const r = C.judge(human(strokes[0]), strokes, 1, new Set([0]), "easy");
   assert.strictEqual(r.ok, false);
 });
+
+test("i の てん: 1回のタップでも合格、はなれた所や長い線は不合格", () => {
+  const dot = S["i"].paths[1];
+  const center = [(dot[0][0] + dot[1][0]) / 2, (dot[0][1] + dot[1][1]) / 2];
+  for (const lv of ["easy", "normal", "strict"]) {
+    assert.strictEqual(C.evaluate([center], dot, lv).ok, true, lv + ": タップ");
+    assert.strictEqual(C.evaluate([[center[0] + 20, center[1] - 15], [center[0] + 22, center[1] - 12]], dot, lv).ok, true, lv + ": ちょん");
+    assert.strictEqual(C.evaluate([[center[0] + 200, center[1]]], dot, lv).ok, false, lv + ": はなれた所");
+    assert.strictEqual(C.evaluate([[center[0], center[1] - 150], [center[0], center[1] + 150]], dot, lv).ok, false, lv + ": 長い線");
+  }
+});
+
+test("i: てんを先に書くと『かきじゅんが ちがう』、たてのあとの てんは合格", () => {
+  const [stem, dot] = S["i"].paths;
+  const tap = [[(dot[0][0] + dot[1][0]) / 2, (dot[0][1] + dot[1][1]) / 2]];
+  const r = C.judge(tap, S["i"].paths, 0, new Set(), "normal");
+  assert.strictEqual(r.reason, "order");
+  assert.strictEqual(C.judge(tap, S["i"].paths, 1, new Set([0]), "normal").ok, true);
+  assert.strictEqual(C.judge(human(stem), S["i"].paths, 0, new Set(), "normal").ok, true);
+});
+
+test("英語: A〜Z・a〜z の52字がすべて入っている", () => {
+  for (const ch of "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {
+    assert.ok(S[ch] && S[ch].paths.length >= 1 && S[ch].rows.length === S[ch].paths.length, ch);
+  }
+});

@@ -6,9 +6,9 @@
 })(typeof self !== "undefined" ? self : this, function () {
   /* しきい値(600の空間で)。start=始点のずれ、shape=形のずれ(平均)、shift=位置がずれても許す大きさ */
   const LEVELS = {
-    easy:   { start: 125, shape: 70, shift: 80 },
-    normal: { start: 95,  shape: 52, shift: 55 },
-    strict: { start: 65,  shape: 38, shift: 0 },
+    easy:   { start: 125, shape: 70, shift: 80, dot: 110 },
+    normal: { start: 95,  shape: 52, shift: 55, dot: 85 },
+    strict: { start: 65,  shape: 38, shift: 0, dot: 60 },
   };
   const N = 24;
 
@@ -48,6 +48,14 @@
     const expLen = pathLength(expected);
     const tol = tolFor(lv, expLen);
     const ulen = pathLength(user);
+    /* 「ちょん」(i や j の てん)は、ちいさく うつだけ。1てんの タップでもよい。いちが ちかければ OK */
+    if (expLen < 45) {
+      const xs = user.map((p) => p[0]), ys = user.map((p) => p[1]);
+      const size = user.length ? Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) : Infinity;
+      const near = user.length >= 1 && dist(centroid(user), centroid(expected)) <= lv.dot;
+      if (near && size <= 110) return { ok: true, reason: "ok", d: 0, shifted: false };
+      return { ok: false, reason: size > 110 ? "shape" : "start", d: 999 };
+    }
     if (user.length < 2 || ulen < Math.max(14, expLen * 0.3)) return { ok: false, reason: "short", d: Infinity };
     const u = resample(user), e = resample(expected);
     const d = meanDist(u, e);

@@ -141,7 +141,7 @@
   pad.addEventListener("pointercancel", end);
 
   function judge(pts) {
-    if (pts.length < 2) return;
+    if (!pts.length) return;
     const r = C.judge(pts, P.strokes, P.n, P.done, settings.strictness);
     if (r.ok) {
       P.done.add(P.n); P.lines.push(pts); P.n++;
@@ -219,14 +219,15 @@
   const canSpeak = "speechSynthesis" in window;
   /* 読み上げ: 終わるまで待てる版(iOSで onend が来ない時のために保険のタイマーつき) */
   let runId = 0;
-  function say(text) {
+  function say(text, lang) {
     return new Promise((res) => {
       if (!canSpeak || !text) return res();
       let ended = false; const fin = () => { if (!ended) { ended = true; res(); } };
       try {
         speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text); u.lang = "ja-JP"; u.rate = 0.85;
-        const v = speechSynthesis.getVoices().find((x) => /^ja/i.test(x.lang)); if (v) u.voice = v;
+        const u = new SpeechSynthesisUtterance(text); u.lang = lang || "ja-JP"; u.rate = lang ? 0.8 : 0.85;
+        const pre = (lang || "ja").slice(0, 2).toLowerCase();
+        const v = speechSynthesis.getVoices().find((x) => x.lang && x.lang.slice(0, 2).toLowerCase() === pre); if (v) u.voice = v;
         u.onend = fin; u.onerror = fin;
         speechSynthesis.speak(u);
         setTimeout(fin, 1500 + text.length * 450);
@@ -279,7 +280,7 @@
   }
   facts.addEventListener("click", (e) => {
     const b = e.target.closest(".spk-btn"); if (!b) return;
-    stopQuiz(); say(b.parentElement.dataset.say);
+    stopQuiz(); say(b.parentElement.dataset.say, b.parentElement.dataset.lang);
   });
 
   /* ---------- 本体との連携 ---------- */

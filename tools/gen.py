@@ -83,6 +83,8 @@ SPECS = {
 
 from kanji_more import MORE  # noqa: E402
 SPECS.update(MORE)
+import alpha_data  # noqa: E402
+SPECS.update(alpha_data.specs())
 
 
 def sample(path, step=1.5):
@@ -110,7 +112,50 @@ def nearest(pix, pts, tt):
     return d, ti
 
 
+def build_mono(spec):
+    """線を太らせて字にする(フォントを使わない)。重なる所は、先に書く画 = A、後に書く画 = A2 にする。"""
+    lw = spec.get('lw', 36) * K
+    ss = 3
+    im = Image.new('L', (P * ss, P * ss), 0)
+    d = ImageDraw.Draw(im)
+    r = lw * ss / 2
+    for path in spec['paths']:
+        pts = [(x * K * ss, y * K * ss) for x, y in path]
+        if len(pts) > 1:
+            d.line(pts, fill=255, width=int(lw * ss), joint='curve')
+        for (x, y) in pts:
+            d.ellipse([x - r, y - r, x + r, y + r], fill=255)
+    a = np.asarray(im.resize((P, P), Image.LANCZOS), dtype=np.float32) / 255.0
+    ys, xs = np.nonzero(a > 0.02)
+    pix = np.stack([xs, ys], 1).astype(np.float32)
+    samples = [sample(p) for p in spec['paths']]
+    n = len(samples)
+    D = np.empty((len(pix), n), np.float32)
+    TT = np.empty((len(pix), n), np.float32)
+    for k, (pts, tt) in enumerate(samples):
+        D[:, k], TT[:, k] = nearest(pix, pts, tt)
+    inside = D <= (lw / 2 + 1.5) ** 2
+    idx = np.arange(len(pix))
+    first = np.where(inside.any(1), inside.argmax(1), D.argmin(1))
+    inside2 = inside.copy()
+    inside2[idx, first] = False
+    has2 = inside2.any(1)
+    second = np.where(has2, inside2.argmax(1), -1)
+    A = np.full((P, P), -1, np.int32)
+    T = np.zeros((P, P), np.float32)
+    A2 = np.full((P, P), -1, np.int32)
+    T2 = np.zeros((P, P), np.float32)
+    A[ys, xs] = first
+    T[ys, xs] = TT[idx, first]
+    m2 = second >= 0
+    A2[ys[m2], xs[m2]] = second[m2]
+    T2[ys[m2], xs[m2]] = TT[idx[m2], second[m2]]
+    return a, A, T, A2, T2
+
+
 def build_maps(spec):
+    if spec.get('mono'):
+        return build_mono(spec)
     f = ImageFont.truetype(spec.get('font', SERIF), spec.get('size', 520) * K, index=0)
     im = Image.new('L', (P, P), 0)
     ImageDraw.Draw(im).text((P / 2, P / 2), spec.get('glyph', spec['ch']), font=f, fill=255, anchor='mm')
@@ -216,7 +261,10 @@ class Maker:
         reg[:] = reg * (1 - al) + GHOST * al
         if 0 <= c < self.n:
             dark = (A >= 0) & (A < c)
-            red = (((A == c) & (T <= u)) | ((A2 == c) & (T2 <= u))) & ~dark
+            over = (A2 == c) & (T2 <= u)
+            red = (((A == c) & (T <= u)) | over) & (~dark | over) if self.spec.get('mono') else (((A == c) & (T <= u)) | over) & ~dark
+            if self.spec.get('mono'):
+                dark = dark & ~over
         else:
             dark = (A >= 0) if c >= self.n else np.zeros(A.shape, bool)
             red = np.zeros(A.shape, bool)

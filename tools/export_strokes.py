@@ -4,9 +4,10 @@
 import json
 import gen
 import allspecs
+import alpha_data
 
 out = {}
-for spec in list(gen.SPECS.values()) + list(allspecs.all_specs().values()):
+for spec in list(gen.SPECS.values()) + list(allspecs.all_specs().values()) + list(alpha_data.specs().values()):
     ch = spec.get('glyph') and spec['ch'] or spec['ch']
     out[ch] = {
         'paths': [[[round(x), round(y)] for x, y in p] for p in spec['paths']],
