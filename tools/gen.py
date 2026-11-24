@@ -81,6 +81,10 @@ SPECS = {
 }
 
 
+from kanji_more import MORE  # noqa: E402
+SPECS.update(MORE)
+
+
 def sample(path, step=1.5):
     pts = []
     for (x0, y0), (x1, y1) in zip(path[:-1], path[1:]):
@@ -107,7 +111,7 @@ def nearest(pix, pts, tt):
 
 
 def build_maps(spec):
-    f = ImageFont.truetype(spec.get('font', SERIF), 520 * K, index=0)
+    f = ImageFont.truetype(spec.get('font', SERIF), spec.get('size', 520) * K, index=0)
     im = Image.new('L', (P, P), 0)
     ImageDraw.Draw(im).text((P / 2, P / 2), spec.get('glyph', spec['ch']), font=f, fill=255, anchor='mm')
     a = np.asarray(im, dtype=np.float32) / 255.0
@@ -131,6 +135,11 @@ def build_maps(spec):
     T2 = np.zeros((P, P), np.float32)
     xx = np.arange(P)[None, :].repeat(P, 0)
     yy = np.arange(P)[:, None].repeat(P, 1)
+    for s_, (x0, x1, y0, y1), zero in spec.get('assign', []):
+        box = (xx >= x0 * K) & (xx <= x1 * K) & (yy >= y0 * K) & (yy <= y1 * K) & (a > 0.02)
+        bx = np.stack([xx[box], yy[box]], 1).astype(np.float32)
+        _, t_s = nearest(bx, *samples[s_])
+        A[box], T[box] = s_, (0 if zero else t_s)
     for own, sec, (x0, x1, y0, y1) in spec['cross']:
         box = (xx >= x0 * K) & (xx <= x1 * K) & (yy >= y0 * K) & (yy <= y1 * K) & (a > 0.02)
         bx = np.stack([xx[box], yy[box]], 1).astype(np.float32)
