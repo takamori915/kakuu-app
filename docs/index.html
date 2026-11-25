@@ -389,7 +389,9 @@ function renderFilters() {
 }
 function cardHTML(d) {
   const m = marks[d.k] || "";
-  const reads = d.alpha ? `<b>${esc(d.alpha.e)} ${esc(d.alpha.w)}</b><br>${esc(d.alpha.name)}` : d.sub ? `よみ <b>${esc(d.sub.split(" ")[0])}</b>` : [d.on.length ? `おん <b>${esc(d.on.join("・"))}</b>` : "", d.kun.length ? `くん <b>${esc(d.kun.join("・"))}</b>` : ""].filter(Boolean).join("<br>");
+  /* カタカナ → ひらがな(カードの よみ 用) */
+  const toHira = (c) => c.replace(/[\u30a1-\u30f6]/g, (x) => String.fromCharCode(x.charCodeAt(0) - 0x60));
+  const reads = d.alpha ? `<b>${esc(d.alpha.e)} ${esc(d.alpha.w)}</b><br>${esc(d.alpha.name)}` : d.sub ? `よみ <b>${esc(d.cat === "number" ? d.sub.split(" ")[0] : toHira(d.k))}</b>` : [d.on.length ? `おん <b>${esc(d.on.join("・"))}</b>` : "", d.kun.length ? `くん <b>${esc(d.kun.join("・"))}</b>` : ""].filter(Boolean).join("<br>");
   return `<li class="card" data-status="${esc(m)}">
     <button class="open" type="button" data-open="${esc(d.k)}" aria-label="${esc(d.k)}の かきじゅんを みる">
       <span class="square"><span class="kanji${d.alpha ? " latin" : ""}">${esc(d.k)}</span></span>
