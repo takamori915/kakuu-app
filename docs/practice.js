@@ -219,6 +219,13 @@
   const canSpeak = "speechSynthesis" in window;
   /* 読み上げ: 終わるまで待てる版(iOSで onend が来ない時のために保険のタイマーつき) */
   let runId = 0;
+  /* 声えらび: まず en-US など ことばと くにが ぴったりの声、なければ おなじ ことばの声 */
+  function pickVoice(lang) {
+    const norm = (l) => (l || "").replace("_", "-").toLowerCase();
+    const want = norm(lang), pre = want.slice(0, 2);
+    const vs = speechSynthesis.getVoices();
+    return vs.find((x) => norm(x.lang) === want) || vs.find((x) => norm(x.lang).slice(0, 2) === pre);
+  }
   function say(text, lang) {
     return new Promise((res) => {
       if (!canSpeak || !text) return res();
@@ -226,8 +233,7 @@
       try {
         speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text); u.lang = lang || "ja-JP"; u.rate = lang ? 0.8 : 0.85;
-        const pre = (lang || "ja").slice(0, 2).toLowerCase();
-        const v = speechSynthesis.getVoices().find((x) => x.lang && x.lang.slice(0, 2).toLowerCase() === pre); if (v) u.voice = v;
+        const v = pickVoice(u.lang); if (v) u.voice = v;
         u.onend = fin; u.onerror = fin;
         speechSynthesis.speak(u);
         setTimeout(fin, 1500 + text.length * 450);
